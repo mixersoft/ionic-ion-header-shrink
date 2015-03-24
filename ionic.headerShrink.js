@@ -28,8 +28,11 @@ angular.module('ionic.ion.headerShrink', [])
 
       var fadeAmt;
       
-      var header = $document[0].body.querySelector('.bar-header');
-      var headerHeight = header.offsetHeight;
+      // var header = $document[0].body.querySelector('.bar-header');
+      // var headerHeight = header.offsetHeight;      
+      var parent = ionic.DomUtil.getParentWithClass($element[0],'menu-content');
+      var headers = parent.getElementsByClassName('bar-header');
+      var headerHeight = headers[0].offsetHeight;
       
       function onScroll(e) {
         var scrollTop = e.detail.scrollTop;
@@ -39,14 +42,21 @@ angular.module('ionic.ion.headerShrink', [])
         } else {
           y = 0;
         }
-        console.log(scrollTop);
+        // console.log(scrollTop);
 
         ionic.requestAnimationFrame(function() {
           fadeAmt = 1 - (y / headerHeight);
-          header.style[ionic.CSS.TRANSFORM] = 'translate3d(0, ' + -y + 'px, 0)';
-          for(var i = 0, j = header.children.length; i < j; i++) {
-            header.children[i].style.opacity = fadeAmt;
+          // header.style[ionic.CSS.TRANSFORM] = 'translate3d(0, ' + -y + 'px, 0)';
+          // for(var i = 0, j = header.children.length; i < j; i++) {
+          //   header.children[i].style.opacity = fadeAmt;
+          // }
+          for (var h=0; h<headers.length; h++) {
+            headers[h].style[ionic.CSS.TRANSFORM] = 'translate3d(0, ' + -y + 'px, 0)';
+            for(var i = 0, j = headers[h].children.length; i < j; i++) {
+              headers[h].children[i].style.opacity = fadeAmt;
+            }
           }
+          $element[0].style.top = Math.max(headerHeight-y, 0) + 'px'
         });
 
         prevY = scrollTop;
